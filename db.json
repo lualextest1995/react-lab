@@ -1,0 +1,152 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Regular User",
+      "email": "user@example.com",
+      "password": "user123",
+      "role": "user"
+    }
+  ],
+  "routes": [
+    {
+      "id": "admin-routes",
+      "userId": "1",
+      "role": "admin",
+      "tree": [
+        {
+          "id": "dashboard",
+          "name": "儀表板",
+          "icon": "📊",
+          "children": [
+            {
+              "id": "analytics",
+              "name": "分析模組",
+              "icon": "📈",
+              "children": [
+                {
+                  "id": "overview",
+                  "name": "概覽",
+                  "path": "/dashboard/analytics/overview",
+                  "component": "DashboardOverview",
+                  "icon": "👁️"
+                },
+                {
+                  "id": "reports",
+                  "name": "報告",
+                  "path": "/dashboard/analytics/reports",
+                  "component": "DashboardReports",
+                  "icon": "📄"
+                },
+                {
+                  "id": "admin-panel",
+                  "name": "管理面板",
+                  "path": "/dashboard/analytics/admin",
+                  "component": "AdminPanel",
+                  "icon": "⚙️"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "settings",
+          "name": "系統設定",
+          "icon": "⚙️",
+          "children": [
+            {
+              "id": "users",
+              "name": "使用者管理",
+              "path": "/settings/users",
+              "component": "UserManagement",
+              "icon": "👥"
+            },
+            {
+              "id": "permissions",
+              "name": "權限管理",
+              "path": "/settings/permissions",
+              "component": "PermissionManagement",
+              "icon": "🔐"
+            }
+          ]
+        },
+        {
+          "id": "products",
+          "name": "產品管理",
+          "icon": "📦",
+          "children": [
+            {
+              "id": "product-list",
+              "name": "產品列表",
+              "path": "/products/list",
+              "component": "ProductList",
+              "icon": "📋"
+            },
+            {
+              "id": "product-detail",
+              "name": "產品詳情",
+              "path": "/products/:id",
+              "component": "ProductDetail",
+              "icon": "🔍",
+              "hidden": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "user-routes",
+      "userId": "2",
+      "role": "user",
+      "tree": [
+        {
+          "id": "dashboard",
+          "name": "儀表板",
+          "icon": "📊",
+          "children": [
+            {
+              "id": "analytics",
+              "name": "分析模組",
+              "icon": "📈",
+              "children": [
+                {
+                  "id": "overview",
+                  "name": "概覽",
+                  "path": "/dashboard/analytics/overview",
+                  "component": "DashboardOverview",
+                  "icon": "👁️"
+                },
+                {
+                  "id": "reports",
+                  "name": "報告",
+                  "path": "/dashboard/analytics/reports",
+                  "component": "DashboardReports",
+                  "icon": "📄"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "token-1-1760775680061",
+      "userId": "1",
+      "createdAt": "2025-10-18T08:21:20.061Z"
+    },
+    {
+      "id": "token-1-1760799257332",
+      "userId": "1",
+      "createdAt": "2025-10-18T14:54:17.332Z"
+    }
+  ]
+}
