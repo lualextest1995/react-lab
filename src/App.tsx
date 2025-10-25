@@ -19,9 +19,16 @@ import {
 import { useState, useRef, useMemo } from "react";
 import z from "zod";
 import type { DateShortcut } from "@/components/DatePicker";
-import type { DateRangeShortcut, DateRangeValue } from "@/components/DateRangePicker";
+import type {
+  DateRangeShortcut,
+  DateRangeValue,
+} from "@/components/DateRangePicker";
 import type { DateTimeShortcut } from "@/components/DateTimePicker";
-import type { DateTimeRangeShortcut, DateTimeRangeValue } from "@/components/DateTimeRangePicker";
+import type {
+  DateTimeRangeShortcut,
+  DateTimeRangeValue,
+} from "@/components/DateTimeRangePicker";
+import DialogExamples from "./examples/DialogExamples";
 
 const eventDateShortcuts: DateShortcut[] = [
   { label: "今天", date: new Date() },
@@ -123,7 +130,9 @@ const dateTimeRangeShortcuts: DateTimeRangeShortcut[] = [
   {
     label: "本週",
     range: {
-      from: new Date(new Date().setDate(new Date().getDate() - new Date().getDay())),
+      from: new Date(
+        new Date().setDate(new Date().getDate() - new Date().getDay())
+      ),
       to: new Date(),
     },
   },
@@ -637,6 +646,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-8 p-8">
+      <DialogExamples />
       {/* 舊版 Form */}
       <div className="w-full max-w-4xl border rounded-lg p-6 bg-slate-50">
         <h2 className="text-xl font-bold mb-4 text-slate-700">
