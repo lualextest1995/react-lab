@@ -1,54 +1,25 @@
-import { Outlet, Link, useLocation } from "react-router";
-import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
+import { RouterProvider } from "react-router";
+import { useAuth } from "./hooks/useAuth";
+import { createAppRouter } from "./router";
 
+/**
+ * 應用程式根元件
+ *
+ * 負責根據使用者的權限樹和登入狀態動態生成路由
+ * 使用 useMemo 優化效能，只在 permissionTree 或 isAuthenticated 變化時重建 router
+ */
 export default function App() {
-  const location = useLocation();
+  const { permissionTree, isAuthenticated } = useAuth();
 
-  const navLinks = [
-    { to: "/", label: "首页" },
-    { to: "/test1", label: "测试页面 1" },
-    { to: "/test2", label: "测试页面 2" },
-    { to: "/test3", label: "测试页面 3" },
-    { to: "/login", label: "登入" },
-  ];
+  // 動態生成路由：只在 permissionTree 或 isAuthenticated 變化時重建
+  const router = useMemo(() => {
+    console.log("[App] 權限樹或登入狀態變更，重新生成路由");
+    console.log("[App] 權限樹:", permissionTree);
+    console.log("[App] 登入狀態:", isAuthenticated);
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* 导航栏 */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-slate-800">
-              React Router v7 Demo
-            </h1>
-            <div className="flex gap-2">
-              {navLinks.map((link) => (
-                <Link key={link.to} to={link.to}>
-                  <Button
-                    variant={location.pathname === link.to ? "default" : "outline"}
-                    size="sm"
-                  >
-                    {link.label}
-                  </Button>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
+    return createAppRouter(permissionTree, isAuthenticated);
+  }, [permissionTree, isAuthenticated]);
 
-      {/* 主内容区域 */}
-      <main>
-        <Outlet />
-      </main>
-
-      {/* 页脚 */}
-      <footer className="bg-white border-t mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-slate-600">
-          <p>React Router v7 Data Mode with Middleware Demo</p>
-          <p className="text-sm mt-2">所有路由已应用日志 middleware，请查看控制台</p>
-        </div>
-      </footer>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
