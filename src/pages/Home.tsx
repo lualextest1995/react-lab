@@ -6,6 +6,7 @@ import FeedbackFormExamples from "@/examples/FeedbackFormExamples";
 import DatePickerExamples from "@/examples/DatePickerExamples";
 import { Button } from "@/components/ui/button";
 import { login } from "@/apis/user";
+import TanstackQueryExample from "@/examples/TanstackQueryExample";
 
 export async function loader() {
   console.log("Home loader: 加载首页数据");
@@ -30,6 +31,7 @@ export default function Home() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-8 p-8">
       <h1 className="text-3xl font-bold text-slate-800">{data.title}</h1>
+      <TanstackQueryExample />
 
       <DialogExamples />
 

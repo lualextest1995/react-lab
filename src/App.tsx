@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { RouterProvider } from "react-router";
 import { useAuth } from "./hooks/useAuth";
 import { createAppRouter } from "./router";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 /**
  * 應用程式根元件
@@ -11,6 +13,7 @@ import { createAppRouter } from "./router";
  */
 export default function App() {
   const { permissionTree, isAuthenticated } = useAuth();
+  const queryClient = new QueryClient();
 
   // 動態生成路由：只在 permissionTree 或 isAuthenticated 變化時重建
   const router = useMemo(() => {
@@ -21,5 +24,10 @@ export default function App() {
     return createAppRouter(permissionTree, isAuthenticated);
   }, [permissionTree, isAuthenticated]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }
