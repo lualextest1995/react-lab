@@ -57,6 +57,16 @@ export const MOCK_PERMISSIONS: Record<string, RouteNode[]> = {
                         icon: 'FileCheck',
                     },
                 },
+                {
+                    id: 'test4',
+                    name: '測試頁面 4',
+                    path: 'test4',
+                    type: 'page',
+                    component: 'Test4',
+                    meta: {
+                        icon: 'Layers',
+                    },
+                },
             ],
         },
     ],

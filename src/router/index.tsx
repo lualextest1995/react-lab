@@ -17,6 +17,7 @@ import { loader as homeLoader } from "@/pages/Home";
 import { loader as test1Loader } from "@/pages/Test1";
 import { loader as test2Loader } from "@/pages/Test2";
 import { loader as test3Loader } from "@/pages/Test3";
+import { loader as test4Loader } from "@/pages/Test4";
 
 // ========== 元件映射表 ==========
 
@@ -33,6 +34,7 @@ const componentMap: Record<string, ComponentType> = {
   Test1: lazy(() => import("@/pages/Test1")),
   Test2: lazy(() => import("@/pages/Test2")),
   Test3: lazy(() => import("@/pages/Test3")),
+  Test4: lazy(() => import("@/pages/Test4")),
 
   // 未來可以繼續新增元件映射
   // 例如：
@@ -50,6 +52,7 @@ const loaderMap: Record<string, LoaderFunction> = {
   Test1: test1Loader,
   Test2: test2Loader,
   Test3: test3Loader,
+  Test4: test4Loader,
 };
 
 /**
