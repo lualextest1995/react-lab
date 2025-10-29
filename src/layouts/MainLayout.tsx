@@ -6,6 +6,7 @@
 import { Outlet, useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 import DynamicSidebar from "@/components/DynamicSidebar";
+import TabBar from "@/components/TabBar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -82,9 +83,15 @@ export default function MainLayout() {
       </aside>
 
       {/* 主內容區 */}
-      <main className="flex-1 overflow-auto">
-        <div className="container mx-auto p-6">
-          <Outlet />
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* 標籤欄 */}
+        <TabBar />
+
+        {/* 內容區域 */}
+        <div className="flex-1 overflow-auto">
+          <div className="container mx-auto p-6">
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>
