@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, Link } from "react-router";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { ROUTE_QUERY_PREFIX_MAP } from "@/router/routeQueryMap";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function loader() {
@@ -12,6 +15,28 @@ export default function Test2() {
   const data = useLoaderData<{ page: string; message: string }>();
   const [seconds, setSeconds] = useState(0);
   const [clicks, setClicks] = useState(0);
+
+  const PREFIX = ROUTE_QUERY_PREFIX_MAP["/test/test2"];
+
+  const {
+    data: usersData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: [`${PREFIX}users`],
+    queryFn: () =>
+      axios
+        .get("https://jsonplaceholder.typicode.com/users")
+        .then((res) => res.data),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 0,
+    enabled: true,
+    retry: 1,
+    retryDelay: 1000,
+    gcTime: Infinity,
+  });
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -27,6 +52,35 @@ export default function Test2() {
       <div className="max-w-2xl w-full border rounded-lg p-8 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg">
         <h1 className="text-4xl font-bold text-purple-700 mb-4">测试页面 2</h1>
         <p className="text-xl text-slate-700 mb-6">{data?.message}</p>
+
+        <div className="bg-white rounded-lg p-6 mb-6 shadow">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-800">
+              用戶列表（TanStack Query）
+            </h2>
+            <Button size="sm" onClick={() => refetch()}>
+              重新載入
+            </Button>
+          </div>
+          {isLoading ? (
+            <p className="text-slate-500">載入中...</p>
+          ) : (
+            <div className="max-h-40 overflow-y-auto">
+              <ul className="space-y-1 text-sm text-slate-600">
+                {usersData?.slice(0, 5).map((user: any) => (
+                  <li key={user.id}>
+                    • {user.name} ({user.email})
+                  </li>
+                ))}
+              </ul>
+              {usersData && usersData.length > 5 && (
+                <p className="text-xs text-slate-400 mt-2">
+                  顯示前 5 筆，共 {usersData.length} 筆
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="bg-white rounded-lg p-6 mb-6 shadow">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">

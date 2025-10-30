@@ -20,6 +20,11 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  ROUTE_QUERY_PREFIX_MAP,
+  type RouteQueryKey,
+} from "@/router/routeQueryMap";
 
 /**
  * 動態載入 Lucide Icon 元件
@@ -47,9 +52,18 @@ function findRouteNode(path: string, menuItems: MenuItem[]): MenuItem | null {
 }
 
 export default function TabBar() {
+  const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
-  const { tabs, activeTabId, openTab, closeTab, switchTab, closeOthers, closeAll } = useTabContext();
+  const {
+    tabs,
+    activeTabId,
+    openTab,
+    closeTab,
+    switchTab,
+    closeOthers,
+    closeAll,
+  } = useTabContext();
   const { menuItems } = useAuth();
 
   // 監聽路由變化，自動打開標籤
@@ -99,6 +113,25 @@ export default function TabBar() {
     const tab = tabs.find((t) => t.id === tabId);
     if (tab?.closable === false) {
       return; // 不可關閉的標籤不處理
+    }
+
+    // 根據路由路徑清理對應的查詢快取
+    const queryPrefix = ROUTE_QUERY_PREFIX_MAP[tabId as RouteQueryKey];
+    if (queryPrefix) {
+      queryClient.removeQueries({
+        predicate: (query) => {
+          const firstKey = query.queryKey[0];
+          if (typeof firstKey !== "string") return false;
+
+          // 支援單一前綴或多個前綴
+          const prefixes = Array.isArray(queryPrefix)
+            ? queryPrefix
+            : [queryPrefix];
+
+          // 檢查 queryKey 的第一個元素是否以任一前綴開頭
+          return prefixes.some((prefix) => firstKey.startsWith(prefix));
+        },
+      });
     }
 
     closeTab(tabId);
@@ -175,20 +208,24 @@ export default function TabBar() {
             <ContextMenuContent>
               {closable && (
                 <>
-                  <ContextMenuItem onClick={() => {
-                    closeTab(tab.id);
-                    // 檢查是否需要導航
-                    if (tab.id === activeTabId) {
-                      setTimeout(() => {
-                        const remainingTabs = tabs.filter((t) => t.id !== tab.id);
-                        if (remainingTabs.length > 0) {
-                          navigate(remainingTabs[0].path);
-                        } else {
-                          navigate("/");
-                        }
-                      }, 0);
-                    }
-                  }}>
+                  <ContextMenuItem
+                    onClick={() => {
+                      closeTab(tab.id);
+                      // 檢查是否需要導航
+                      if (tab.id === activeTabId) {
+                        setTimeout(() => {
+                          const remainingTabs = tabs.filter(
+                            (t) => t.id !== tab.id
+                          );
+                          if (remainingTabs.length > 0) {
+                            navigate(remainingTabs[0].path);
+                          } else {
+                            navigate("/");
+                          }
+                        }, 0);
+                      }
+                    }}
+                  >
                     關閉
                   </ContextMenuItem>
                   <ContextMenuSeparator />

@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useLoaderData, Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { ROUTE_QUERY_PREFIX_MAP } from "@/router/routeQueryMap";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function loader() {
@@ -14,11 +17,39 @@ export default function Test1() {
   const [note, setNote] = useState("");
   const [favorite, setFavorite] = useState(false);
 
+  const {
+    data: data1,
+    // error,
+    // isFetching,
+    refetch,
+  } = useQuery({
+    queryKey: [`${ROUTE_QUERY_PREFIX_MAP["/test1"]}list`],
+    queryFn: getTodos,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 0, // 0 seconds
+    enabled: true,
+    retry: 1,
+    retryDelay: 1000,
+    gcTime: Infinity,
+  });
+
+  function getTodos() {
+    return axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => res.data);
+  }
+
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 p-8">
       <div className="max-w-2xl w-full border rounded-lg p-8 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg">
         <h1 className="text-4xl font-bold text-indigo-700 mb-4">测试页面 1</h1>
         <p className="text-xl text-slate-700 mb-6">{data?.message}</p>
+
+        <Button onClick={() => refetch()}>refetch</Button>
+
+        <pre>{JSON.stringify(data1, null, 2)}</pre>
 
         <div className="bg-white rounded-lg p-6 mb-6 shadow">
           <h2 className="text-lg font-semibold text-slate-800 mb-2">
