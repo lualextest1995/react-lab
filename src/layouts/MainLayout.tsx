@@ -31,14 +31,16 @@ function TabContentArea() {
     setCachedOutlets((prev) => {
       const key = location.pathname;
       const existing = prev.get(key);
-      if (existing === outlet) {
+      // 如果已存在且當前路由是活動標籤，才更新緩存
+      // 這樣可以避免在切換標籤時錯誤地更新其他標籤的緩存
+      if (existing && key !== activeTabId) {
         return prev;
       }
       const next = new Map(prev);
       next.set(key, outlet);
       return next;
     });
-  }, [location.pathname, outlet]);
+  }, [location.pathname, outlet, activeTabId]);
 
   // 清除已關閉標籤對應的快取
   useEffect(() => {
